@@ -27,31 +27,31 @@
 	level
 };
 
-
-// Falta mejorar el sonido
 ~car = {
 	arg frequency, mul = 0.5;
-	LFSaw.ar(freq:frequency - 5, mul: mul) +
-	LFSaw.ar(freq:frequency, mul: mul) +
-	LFSaw.ar(freq:frequency + 5, mul: mul)
-};
+	LFSaw.ar(frequency, mul: mul)+
+	LFSaw.ar(frequency - 70 - 20.rand,  mul: mul)
+}
 
 /* ------------------parametros-----------------------------
     quantity: cantidad de pitidos totales
    ---------------------------------------------------------
 */
-~carKlaxon= {
+~carHorn= {
 	arg quantity;
 	Mix.fill(quantity,
 		{
 			arg i;
-			var frequency = 200 + 100.rand, mul, levels, times, env;
+			var frequency = rrand(420,512), mul, levels, times, env;
 			levels = ~levelGenerator.value(i, quantity);
 			if(quantity == 1, {times = [1]}, {times = Array.fill(quantity - 1, 1).normalizeSum;});
 			env = Env.new(levels, times);
-			~car.value(frequency, EnvGen.kr(env, timeScale:quantity * 0.2,doneAction: 2))
+			//~bike.value(EnvGen.kr(env, timeScale:quantity * 0.3,doneAction: 2))
+			~car.value(frequency, EnvGen.kr(env, timeScale:quantity * 0.3,doneAction: 2))
 		}
 	);
 };
 
-{~carKlaxon.value(14)}.play;
+{~carHorn.value(3)}.play;
+
+
